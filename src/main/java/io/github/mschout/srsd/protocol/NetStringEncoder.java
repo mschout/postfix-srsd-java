@@ -8,7 +8,7 @@ import java.nio.charset.StandardCharsets;
 public class NetStringEncoder extends MessageToByteEncoder<String> {
 
   @Override
-  protected void encode(ChannelHandlerContext ctx, String msg, ByteBuf out) throws Exception {
+  protected void encode(ChannelHandlerContext ctx, String msg, ByteBuf out) {
     String data = String.format("%d:%s,", msg.length(), msg);
     out.writeBytes(data.getBytes(StandardCharsets.UTF_8));
   }

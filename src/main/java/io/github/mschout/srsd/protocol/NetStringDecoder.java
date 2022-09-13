@@ -6,7 +6,7 @@ import io.netty.handler.codec.ReplayingDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-public class NetStringDecoder extends ReplayingDecoder {
+public class NetStringDecoder extends ReplayingDecoder<Void> {
 
   @Override
   protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {

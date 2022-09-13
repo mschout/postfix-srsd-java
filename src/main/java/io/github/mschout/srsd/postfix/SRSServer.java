@@ -1,52 +1,43 @@
 package io.github.mschout.srsd.postfix;
 
 import io.github.mschout.email.srs.SRS;
-import io.github.mschout.srsd.protocol.NetStringDecoder;
-import io.github.mschout.srsd.protocol.NetStringEncoder;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.channel.unix.DomainSocketAddress;
+import io.netty.util.internal.logging.InternalLoggerFactory;
+import io.netty.util.internal.logging.Slf4JLoggerFactory;
 import java.util.List;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Getter
+@Builder
 public class SRSServer {
-  private final int port;
+  private final String socketPath;
+
+  private final List<String> secrets;
+
+  private final String localAlias;
 
   public void run() throws InterruptedException {
-    EventLoopGroup bossGroup = new NioEventLoopGroup();
-    EventLoopGroup workerGroup = new NioEventLoopGroup();
+    // Set up Netty to use SlF4j
+    InternalLoggerFactory.setDefaultFactory(Slf4JLoggerFactory.INSTANCE);
 
-    // TODO - these should be configurable
-    var srs = SRS.guardedSRS(List.of("secrets"));
-    var localAlias = "example.com";
+    var srs = SRS.guardedSRS(secrets);
+
+    ServerBootstrap bootstrap = SRSServerFactory.createServer(srs, localAlias).option(ChannelOption.SO_BACKLOG, 128);
+
+    //.childOption(ChannelOption.SO_KEEPALIVE, true); ???
 
     try {
-      ServerBootstrap bootstrap = new ServerBootstrap()
-        .group(bossGroup, workerGroup)
-        .channel(NioServerSocketChannel.class)
-        .childHandler(
-          new ChannelInitializer<SocketChannel>() {
-
-            @Override
-            protected void initChannel(SocketChannel ch) {
-              ch.pipeline().addLast(new NetStringDecoder(), new NetStringEncoder(), new SRSServerHandler(srs, localAlias));
-            }
-          }
-        )
-        .option(ChannelOption.SO_BACKLOG, 128);
-      //.childOption(ChannelOption.SO_KEEPALIVE, true); ???
-
-      bootstrap.bind(port).sync().channel().closeFuture().sync();
+      bootstrap.bind(new DomainSocketAddress(socketPath)).sync().channel().closeFuture().sync();
     } finally {
-      bossGroup.shutdownGracefully();
-      workerGroup.shutdownGracefully();
+      if (bootstrap != null) {
+        bootstrap.config().group().shutdownGracefully();
+        bootstrap.config().childGroup().shutdownGracefully();
+      }
     }
   }
 }
