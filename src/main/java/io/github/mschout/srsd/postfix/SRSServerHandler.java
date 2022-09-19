@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 public class SRSServerHandler extends ChannelInboundHandlerAdapter {
   private static final String CMD_FORWARD_PREFIX = "srsencoder ";
 
-  private static final String CMD_REVERSE_PREFIX = "srsencoder ";
+  private static final String CMD_REVERSE_PREFIX = "srsdecoder ";
 
   private final SRS srs;
 
