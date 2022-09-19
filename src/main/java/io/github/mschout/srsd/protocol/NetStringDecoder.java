@@ -2,38 +2,55 @@ package io.github.mschout.srsd.protocol;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.codec.ReplayingDecoder;
+import io.netty.handler.codec.TooLongFrameException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
-public class NetStringDecoder extends ReplayingDecoder<Void> {
+@Slf4j
+public class NetStringDecoder extends ByteToMessageDecoder {
+  private static final int MAX_FRAME_SIZE = 8192;
 
   @Override
   protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
-    System.err.println("Readable bytes " + in.readableBytes());
+    int readableBytes = in.readableBytes();
+    log.debug("ReadableBytes: " + readableBytes);
+
+    in.markReaderIndex();
+
+    if (readableBytes > MAX_FRAME_SIZE) throw new TooLongFrameException("Frame too big " + readableBytes + " > " + MAX_FRAME_SIZE);
 
     // Minimum netstring must be at least 3 chars long: "0:,"
-    if (in.readableBytes() < 3) return;
+    if (readableBytes < 3) return;
 
     final int sizeLength = in.bytesBefore((byte) ':');
-
-    System.err.println("Size Length: " + sizeLength);
 
     // if we haven't received the size delimiter yet return
     if (sizeLength < 0) return;
 
     final int dataLength = readLength(in, sizeLength);
 
-    System.err.println("Size: " + dataLength);
+    if (dataLength > MAX_FRAME_SIZE) throw new TooLongFrameException("Frame too big " + dataLength + " > " + MAX_FRAME_SIZE);
 
-    // read the ':'
-    in.readBytes(1);
+    // NOTE: if we bail out early from here on out, we must call .resetReaderIndex()
+    if (readableBytes < dataLength + 2) { // ":" plus netstring value plus ","
+      log.debug("We have not yet received the complete netstring");
+      in.resetReaderIndex();
+      return;
+    }
+
+    log.debug("Netstring Length is: {}", dataLength);
+
+    // we should have the entire payload now
+
+    in.skipBytes(1); // skip the ':'
 
     String value = in.readCharSequence(dataLength, StandardCharsets.UTF_8).toString();
+    log.debug("Read netstring {}", value);
 
-    System.err.println("Value: " + value);
-
-    in.readBytes(1);
+    in.skipBytes(1); // skip the ','
 
     out.add(value);
   }
