@@ -21,8 +21,8 @@ dependencies {
   implementation 'com.google.guava:guava:31.1-jre'
   implementation 'info.picocli:picocli:4.6.3'
   implementation 'io.github.mschout:mail-srs-java:0.9.1'
-  implementation 'io.netty:netty-all:4.1.81.Final'
   implementation 'io.github.mschout:netty-codec-netstring:0.6.0'
+  implementation 'io.netty:netty-all:4.1.81.Final'
   implementation 'org.jetbrains:annotations:23.0.0'
   implementation 'org.slf4j:slf4j-api:2.0.0'
 
@@ -33,6 +33,13 @@ dependencies {
 application {
   mainClass = 'io.github.mschout.srsd.postfix.App'
 }
+
+java {
+  toolchain {
+    languageVersion.set(JavaLanguageVersion.of(17))
+  }
+}
+
 
 // Include all dependendencies in the jar
 jar {
@@ -49,13 +56,6 @@ jar {
   }
 }
 
-
-graalvmNative {
-  binaries.all {
-    resources.autodetect()
-  }
-  toolchainDetection = false
-}
 
 // Format java code with spotlessApply task
 spotless {
