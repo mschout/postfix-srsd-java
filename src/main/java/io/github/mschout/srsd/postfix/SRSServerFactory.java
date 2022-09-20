@@ -1,8 +1,8 @@
 package io.github.mschout.srsd.postfix;
 
 import io.github.mschout.email.srs.SRS;
-import io.github.mschout.srsd.protocol.NetStringDecoder;
-import io.github.mschout.srsd.protocol.NetStringEncoder;
+import io.github.mschout.netty.codec.netstring.ByteToNetstringDecoder;
+import io.github.mschout.netty.codec.netstring.NetstringToByteEncoder;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
@@ -14,11 +14,13 @@ import io.netty.channel.kqueue.KQueue;
 import io.netty.channel.kqueue.KQueueDomainSocketChannel;
 import io.netty.channel.kqueue.KQueueEventLoopGroup;
 import io.netty.channel.kqueue.KQueueServerDomainSocketChannel;
+import java.nio.charset.StandardCharsets;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 
 @Slf4j
 public class SRSServerFactory {
+  private static final int MAX_FRAME_SIZE = 256 * 1024;
 
   public static ServerBootstrap createServer(SRS srs, String localAlias) {
     if (Epoll.isAvailable()) {
@@ -43,8 +45,14 @@ public class SRSServerFactory {
         new ChannelInitializer<EpollDomainSocketChannel>() {
 
           @Override
-          protected void initChannel(@NotNull EpollDomainSocketChannel ch) {
-            ch.pipeline().addLast(new NetStringDecoder(), new NetStringEncoder(), new SRSServerHandler(srs, localAlias));
+          protected void initChannel(@NotNull EpollDomainSocketChannel channel) {
+            channel
+              .pipeline()
+              .addLast(
+                new ByteToNetstringDecoder(MAX_FRAME_SIZE, StandardCharsets.UTF_8),
+                new NetstringToByteEncoder(StandardCharsets.UTF_8),
+                new SRSServerHandler(srs, localAlias)
+              );
           }
         }
       );
@@ -63,8 +71,14 @@ public class SRSServerFactory {
         new ChannelInitializer<KQueueDomainSocketChannel>() {
 
           @Override
-          protected void initChannel(@NotNull KQueueDomainSocketChannel ch) {
-            ch.pipeline().addLast(new NetStringDecoder(), new NetStringEncoder(), new SRSServerHandler(srs, localAlias));
+          protected void initChannel(@NotNull KQueueDomainSocketChannel channel) {
+            channel
+              .pipeline()
+              .addLast(
+                new ByteToNetstringDecoder(MAX_FRAME_SIZE, StandardCharsets.UTF_8),
+                new NetstringToByteEncoder(StandardCharsets.UTF_8),
+                new SRSServerHandler(srs, localAlias)
+              );
           }
         }
       );
