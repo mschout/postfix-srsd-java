@@ -1,7 +1,9 @@
 // Gradle build file, set up to build a native executable via graalvm
 plugins {
   id 'application'
-  id 'com.olafmertens.git-version' version '0.1.1'
+
+  // auto version from git tag
+  id "fr.brouillard.oss.gradle.jgitver" version "0.10.0-rc03"
 
   // Delombok, use delomboked sources for javadoc
   id 'io.freefair.lombok' version '6.5.1'
@@ -74,6 +76,11 @@ spotless {
 
 tasks.withType(JavaCompile) {
   options.encoding = 'UTF-8'
+}
+
+jgitver {
+  autoIncrementPatch false
+  nonQualifierBranches = "main,master"
 }
 
 // vim: ts=2 sw=2
