@@ -23,19 +23,17 @@ public class SRSServerHandler extends ChannelInboundHandlerAdapter {
   private final String localAlias;
 
   @Override
-  public void channelRead(@NotNull ChannelHandlerContext ctx, @NotNull Object msg) throws Exception {
+  public void channelRead(@NotNull ChannelHandlerContext ctx, @NotNull Object msg) {
     String request = (String) msg;
 
-    String response = handleRequest(msg);
+    String response = handleRequest(request);
 
     ChannelFuture future = ctx.writeAndFlush(response);
 
     future.addListener(ChannelFutureListener.CLOSE);
   }
 
-  private String handleRequest(Object msg) {
-    String request = (String) msg;
-
+  private String handleRequest(String request) {
     if (request.toLowerCase().startsWith(CMD_FORWARD_PREFIX)) {
       return forwardAddress(request.substring(CMD_FORWARD_PREFIX.length()));
     } else if (request.toLowerCase().startsWith(CMD_REVERSE_PREFIX)) {
