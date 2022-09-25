@@ -76,8 +76,8 @@ public class SRSServerFactory {
       .childHandler(buildChildHandler(KQueueDomainSocketChannel.class, srs, localAlias));
   }
 
-  private static <T extends Channel> ChannelInitializer<T> buildChildHandler(Class<T> ignoredClazz, SRS srs, String localAlias) {
-    return new ChannelInitializer<>() {
+  private static <T extends Channel> ChannelInitializer<T> buildChildHandler(Class<T> ignoredClass, SRS srs, String localAlias) {
+    return new ChannelInitializer<T>() {
 
       @Override
       protected void initChannel(@NotNull T channel) {
