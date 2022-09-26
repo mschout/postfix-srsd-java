@@ -23,14 +23,12 @@ public class SRSServerHandler extends ChannelInboundHandlerAdapter {
   private final String localAlias;
 
   @Override
-  public void channelRead(@NotNull ChannelHandlerContext ctx, @NotNull Object msg) {
+  public void channelRead(@NotNull ChannelHandlerContext ctx, @NotNull Object msg) throws InterruptedException {
     String request = (String) msg;
 
     String response = handleRequest(request);
 
-    ChannelFuture future = ctx.writeAndFlush(response);
-
-    future.addListener(ChannelFutureListener.CLOSE);
+    ctx.writeAndFlush(response).sync();
   }
 
   private String handleRequest(String request) {
