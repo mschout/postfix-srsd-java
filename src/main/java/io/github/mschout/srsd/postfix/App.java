@@ -47,6 +47,8 @@ public class App implements Runnable {
   public void run() {
     LoggingConfiguration.configureLogging(this.logOptions);
 
+    log.info("Local alias: {}", localAlias);
+
     var secrets = Files.asCharSource(new File(secretFile), StandardCharsets.UTF_8).readLines();
 
     SRSServer.builder().socketOptions(socketOptions).secrets(secrets).localAlias(localAlias).build().run();
