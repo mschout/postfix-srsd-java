@@ -1,0 +1,15 @@
+version: '3.9'
+
+services:
+  postfix-srsd:
+    image: mschout/postfix-srsd-java:latest
+    ports: [ "2510:2510" ]
+    environment:
+      LOCAL_ALIAS: bounces.example.com
+      SECRET_NAME: srsd_secrets
+    secrets:
+      - srsd_secrets
+
+secrets:
+  srsd_secrets:
+    file: secrets.txt
