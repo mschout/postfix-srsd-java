@@ -3,15 +3,13 @@ guava = "31.1-jre"
 jetbrains-annotations = "23.0.0"
 junit = "5.9.0"
 logback = "1.4.1"
+lombok-plugin = "9.5.0"
 mail-srs = "0.9.1"
+mschout-conventions = "0.7.0"
 netty = "4.1.82.Final"
 netty-codec-netstring = "0.6.1"
 picocli = "4.6.3"
 slf4j = "2.0.1"
-
-jgitver-plugin = "0.10.0-rc03"
-lombok-plugin = "6.5.1"
-spotless-plugin = "8.9.0"
 
 [libraries]
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
@@ -27,6 +25,6 @@ picocli = { module = "info.picocli:picocli", version.ref = "picocli" }
 slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
 
 [plugins]
-jgitver = { id = "fr.brouillard.oss.gradle.jgitver", version.ref = "jgitver-plugin" }
 lombok = { id = "io.freefair.lombok", version.ref = "lombok-plugin" }
-spotless = { id = "com.diffplug.spotless", version.ref = "spotless-plugin" }
+mschout-all-conventions = { id = "io.github.mschout.all-conventions", version.ref = "mschout-conventions" }
+mschout-maven-publish-conventions = { id = "io.github.mschout.maven-publish-conventions", version.ref = "mschout-conventions" }

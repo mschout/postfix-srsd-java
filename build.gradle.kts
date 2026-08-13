@@ -1,15 +1,11 @@
-// Gradle build file, set up to build a native executable via graalvm
 plugins {
   application
 
-  // auto version from git tag
-  alias(libs.plugins.jgitver)
-
-  // Delombok, use delomboked sources for javadoc
+  // De-lombok, use de-lomboked sources for Javadoc
   alias(libs.plugins.lombok)
 
-  // Format java code with spotless via prettier-java
-  alias(libs.plugins.spotless)
+  // Format Java code with spotless via prettier-java
+  alias(libs.plugins.mschout.all.conventions)
 }
 
 repositories {
@@ -36,13 +32,7 @@ application {
   mainClass = "io.github.mschout.srsd.postfix.App"
 }
 
-java {
-  toolchain {
-    languageVersion = JavaLanguageVersion.of(11)
-  }
-}
-
-// Include all dependendencies in the jar
+// Include all dependencies in the jar
 tasks.jar {
   manifest {
     attributes("Main-Class" to "io.github.mschout.srsd.postfix.App")
@@ -57,8 +47,8 @@ tasks.jar {
   })
 }
 
-// Format java code with spotlessApply task
-//spotless {
+// Format Java code with spotlessApply task
+// spotless {
 //  java {
 //    prettier(mapOf("prettier" to "2.0.5", "prettier-plugin-java" to "0.8.0")).config(
 //      mapOf(
@@ -70,15 +60,4 @@ tasks.jar {
 //      )
 //    )
 //  }
-//}
-
-tasks.withType<JavaCompile>().configureEach {
-  options.encoding = "UTF-8"
-}
-
-jgitver {
-  autoIncrementPatch = false
-  nonQualifierBranches = "main,master"
-}
-
-// vim: ts=2 sw=2
+// }
