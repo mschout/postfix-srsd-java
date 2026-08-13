@@ -11,24 +11,27 @@ import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
-/**
- * Main Postfix SRSD class.
- */
-@SuppressWarnings({ "FieldMayBeFinal", "CanBeFinal", "unused" })
+/** Main Postfix SRSD class. */
+@SuppressWarnings({"FieldMayBeFinal", "CanBeFinal", "unused"})
 @Slf4j
-@Command(name = "postfix-srsd", mixinStandardHelpOptions = true, description = "SRS encoder and decoder daemon for postfix.")
+@Command(
+    name = "postfix-srsd",
+    mixinStandardHelpOptions = true,
+    description = "SRS encoder and decoder daemon for postfix.")
 public class App implements Runnable {
   @ArgGroup(multiplicity = "1")
   SocketOptions socketOptions;
 
   @Option(
-    names = { "--secret-file" },
-    required = true,
-    description = "File containing SRS encoder secrets.  First line is the default secret, additional lines are valid secrets for verifying addresses."
-  )
+      names = {"--secret-file"},
+      required = true,
+      description =
+          "File containing SRS encoder secrets.  First line is the default secret, additional lines are valid secrets for verifying addresses.")
   private String secretFile;
 
-  @Option(names = { "--local-alias" }, required = true)
+  @Option(
+      names = {"--local-alias"},
+      required = true)
   private String localAlias;
 
   @ArgGroup(exclusive = false, multiplicity = "1")
@@ -50,6 +53,11 @@ public class App implements Runnable {
 
     var secrets = Files.readAllLines(Path.of(secretFile));
 
-    SRSServer.builder().socketOptions(socketOptions).secrets(secrets).localAlias(localAlias).build().run();
+    SRSServer.builder()
+        .socketOptions(socketOptions)
+        .secrets(secrets)
+        .localAlias(localAlias)
+        .build()
+        .run();
   }
 }

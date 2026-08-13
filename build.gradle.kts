@@ -46,17 +46,10 @@ tasks.jar {
   })
 }
 
-// Format Java code with spotlessApply task
-// spotless {
-//  java {
-//    prettier(mapOf("prettier" to "2.0.5", "prettier-plugin-java" to "0.8.0")).config(
-//      mapOf(
-//        "parser" to "java",
-//        "tabWidth" to 2,
-//        "printWidth" to 140,
-//        "trailingComma" to "none",
-//        "useTabs" to false
-//      )
-//    )
-//  }
-// }
+spotless {
+  java {
+    importOrder()
+    removeUnusedImports()
+    googleJavaFormat()
+  }
+}

@@ -1,8 +1,6 @@
 package io.github.mschout.srsd.postfix;
 
 import io.github.mschout.email.srs.SRS;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import java.security.InvalidKeyException;
@@ -22,7 +20,8 @@ public class SRSServerHandler extends ChannelInboundHandlerAdapter {
   private final String localAlias;
 
   @Override
-  public void channelRead(@NotNull ChannelHandlerContext ctx, @NotNull Object msg) throws InterruptedException {
+  public void channelRead(@NotNull ChannelHandlerContext ctx, @NotNull Object msg)
+      throws InterruptedException {
     String request = (String) msg;
 
     String response = handleRequest(request);
@@ -66,7 +65,8 @@ public class SRSServerHandler extends ChannelInboundHandlerAdapter {
 
     if (!address.contains("@")) return "NOTFOUND address does not contain a domain";
 
-    if (!address.toLowerCase().endsWith("@" + localAlias.toLowerCase())) return "NOTFOUND external domains are ignored";
+    if (!address.toLowerCase().endsWith("@" + localAlias.toLowerCase()))
+      return "NOTFOUND external domains are ignored";
 
     String reverse = srs.reverse(address);
 
