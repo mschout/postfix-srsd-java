@@ -1,5 +1,5 @@
 [versions]
-guava = "31.1-jre"
+guava = "33.6.0-jre"
 jetbrains-annotations = "23.0.0"
 junit = "5.9.0"
 logback = "1.4.1"
