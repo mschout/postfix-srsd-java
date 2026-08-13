@@ -1,10 +1,9 @@
 package io.github.mschout.srsd.postfix;
 
-import com.google.common.io.Files;
 import io.github.mschout.srsd.postfix.options.LogOptions;
 import io.github.mschout.srsd.postfix.options.SocketOptions;
-import java.io.File;
-import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import picocli.CommandLine;
@@ -49,7 +48,7 @@ public class App implements Runnable {
 
     log.info("Local alias: {}", localAlias);
 
-    var secrets = Files.asCharSource(new File(secretFile), StandardCharsets.UTF_8).readLines();
+    var secrets = Files.readAllLines(Path.of(secretFile));
 
     SRSServer.builder().socketOptions(socketOptions).secrets(secrets).localAlias(localAlias).build().run();
   }

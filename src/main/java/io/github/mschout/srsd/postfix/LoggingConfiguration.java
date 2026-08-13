@@ -8,7 +8,6 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.ConsoleAppender;
 import ch.qos.logback.core.FileAppender;
 import ch.qos.logback.core.encoder.LayoutWrappingEncoder;
-import com.google.common.base.Strings;
 import io.github.mschout.srsd.postfix.options.LogOptions;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -18,7 +17,7 @@ import org.slf4j.LoggerFactory;
 public class LoggingConfiguration {
 
   public static void configureLogging(LogOptions logOptions) {
-    if (Strings.isNullOrEmpty(logOptions.getLogFile())) return;
+    if (logOptions.getLogFile() == null || logOptions.getLogFile().isEmpty()) return;
 
     var loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
 
