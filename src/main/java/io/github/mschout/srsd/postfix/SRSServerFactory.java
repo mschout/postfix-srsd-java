@@ -32,7 +32,8 @@ public class SRSServerFactory {
     } else if (KQueue.isAvailable()) {
       bootstrap = createKQueueServer(srs, localAlias);
     } else {
-      throw new UnsupportedOperationException("Neither KQueue nor Epoll is available on this platform");
+      throw new UnsupportedOperationException(
+          "Neither KQueue nor Epoll is available on this platform");
     }
 
     return bootstrap;
@@ -45,9 +46,9 @@ public class SRSServerFactory {
     ServerBootstrap bootstrap = new ServerBootstrap();
 
     bootstrap
-      .group(bossGroup, workerGroup)
-      .channel(NioServerSocketChannel.class)
-      .childHandler(buildChildHandler(SocketChannel.class, srs, localAlias));
+        .group(bossGroup, workerGroup)
+        .channel(NioServerSocketChannel.class)
+        .childHandler(buildChildHandler(SocketChannel.class, srs, localAlias));
 
     return bootstrap;
   }
@@ -59,9 +60,9 @@ public class SRSServerFactory {
     EventLoopGroup workerGroup = new EpollEventLoopGroup();
 
     return new ServerBootstrap()
-      .group(bossGroup, workerGroup)
-      .channel(EpollServerDomainSocketChannel.class)
-      .childHandler(buildChildHandler(EpollDomainSocketChannel.class, srs, localAlias));
+        .group(bossGroup, workerGroup)
+        .channel(EpollServerDomainSocketChannel.class)
+        .childHandler(buildChildHandler(EpollDomainSocketChannel.class, srs, localAlias));
   }
 
   private static ServerBootstrap createKQueueServer(SRS srs, String localAlias) {
@@ -71,23 +72,23 @@ public class SRSServerFactory {
     EventLoopGroup workerGroup = new KQueueEventLoopGroup();
 
     return new ServerBootstrap()
-      .group(bossGroup, workerGroup)
-      .channel(KQueueServerDomainSocketChannel.class)
-      .childHandler(buildChildHandler(KQueueDomainSocketChannel.class, srs, localAlias));
+        .group(bossGroup, workerGroup)
+        .channel(KQueueServerDomainSocketChannel.class)
+        .childHandler(buildChildHandler(KQueueDomainSocketChannel.class, srs, localAlias));
   }
 
-  private static <T extends Channel> ChannelInitializer<T> buildChildHandler(Class<T> ignoredClass, SRS srs, String localAlias) {
+  private static <T extends Channel> ChannelInitializer<T> buildChildHandler(
+      Class<T> ignoredClass, SRS srs, String localAlias) {
     return new ChannelInitializer<T>() {
 
       @Override
       protected void initChannel(@NotNull T channel) {
         channel
-          .pipeline()
-          .addLast(
-            new ByteToNetstringDecoder(MAX_FRAME_SIZE, StandardCharsets.UTF_8),
-            new NetstringToByteEncoder(StandardCharsets.UTF_8),
-            new SRSServerHandler(srs, localAlias)
-          );
+            .pipeline()
+            .addLast(
+                new ByteToNetstringDecoder(MAX_FRAME_SIZE, StandardCharsets.UTF_8),
+                new NetstringToByteEncoder(StandardCharsets.UTF_8),
+                new SRSServerHandler(srs, localAlias));
       }
     };
   }

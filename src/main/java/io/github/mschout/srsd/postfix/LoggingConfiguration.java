@@ -22,7 +22,8 @@ public class LoggingConfiguration {
     var loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
 
     var rootLogger = loggerContext.getLogger(Logger.ROOT_LOGGER_NAME);
-    rootLogger.detachAndStopAllAppenders(); // only use our own appender if any other appender was added
+    rootLogger
+        .detachAndStopAllAppenders(); // only use our own appender if any other appender was added
 
     rootLogger.setLevel(Level.toLevel(logOptions.getLogLevel()));
 
@@ -38,10 +39,9 @@ public class LoggingConfiguration {
       rootLogger.addAppender(appender);
 
       log.info(
-        "Logback initialized using syslog facility {} at level {}",
-        logOptions.getSyslogFacility(),
-        rootLogger.getLevel().toString()
-      );
+          "Logback initialized using syslog facility {} at level {}",
+          logOptions.getSyslogFacility(),
+          rootLogger.getLevel().toString());
     } else if (logOptions.getLogFile().equals("-")) {
       // console appender
       var appender = new ConsoleAppender<ILoggingEvent>();
@@ -52,7 +52,8 @@ public class LoggingConfiguration {
 
       rootLogger.addAppender(appender);
 
-      log.info("Logback initialized using console output at level {}", rootLogger.getLevel().toString());
+      log.info(
+          "Logback initialized using console output at level {}", rootLogger.getLevel().toString());
     } else {
       // Log to a file.
       var appender = new FileAppender<ILoggingEvent>();
@@ -65,7 +66,10 @@ public class LoggingConfiguration {
 
       rootLogger.addAppender(appender);
 
-      log.info("Logback initialized using log file {} at level {}", logOptions.getLogFile(), rootLogger.getLevel().toString());
+      log.info(
+          "Logback initialized using log file {} at level {}",
+          logOptions.getLogFile(),
+          rootLogger.getLevel().toString());
     }
   }
 
