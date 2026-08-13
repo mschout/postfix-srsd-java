@@ -1,5 +1,7 @@
 package io.github.mschout.srsd.postfix;
 
+import static io.github.mschout.srsd.postfix.Netstrings.netstring;
+import static io.github.mschout.srsd.postfix.Netstrings.readNetstring;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.mockito.Mockito.mock;
@@ -11,15 +13,12 @@ import io.netty.channel.Channel;
 import io.netty.channel.epoll.Epoll;
 import io.netty.channel.kqueue.KQueue;
 import io.netty.channel.unix.DomainSocketAddress;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnixDomainSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.SocketChannel;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.security.InvalidKeyException;
 import java.util.concurrent.TimeUnit;
@@ -54,27 +53,6 @@ class SRSServerFactoryTest {
       bootstrap.config().group().shutdownGracefully(0, 0, TimeUnit.SECONDS);
       bootstrap.config().childGroup().shutdownGracefully(0, 0, TimeUnit.SECONDS);
     }
-  }
-
-  private static byte[] netstring(String payload) {
-    byte[] data = payload.getBytes(StandardCharsets.UTF_8);
-    return (data.length + ":" + payload + ",").getBytes(StandardCharsets.UTF_8);
-  }
-
-  private static String readNetstring(InputStream in) throws IOException {
-    var length = new StringBuilder();
-
-    int b;
-    while ((b = in.read()) != ':') {
-      if (b == -1) throw new IOException("EOF while reading netstring length");
-      length.append((char) b);
-    }
-
-    byte[] payload = in.readNBytes(Integer.parseInt(length.toString()));
-
-    assertThat((char) in.read()).isEqualTo(',');
-
-    return new String(payload, StandardCharsets.UTF_8);
   }
 
   @Test
