@@ -1,0 +1,84 @@
+// Gradle build file, set up to build a native executable via graalvm
+plugins {
+  application
+
+  // auto version from git tag
+  id("fr.brouillard.oss.gradle.jgitver") version "0.10.0-rc03"
+
+  // Delombok, use delomboked sources for javadoc
+  id("io.freefair.lombok") version "6.5.1"
+
+  // Format java code with spotless via prettier-java
+  id("com.diffplug.spotless") version "8.9.0"
+}
+
+repositories {
+  mavenLocal()
+  mavenCentral()
+}
+
+dependencies {
+  implementation("ch.qos.logback:logback-classic:1.4.1")
+  implementation("ch.qos.logback:logback-core:1.4.1")
+  implementation("com.google.guava:guava:31.1-jre")
+  implementation("info.picocli:picocli:4.6.3")
+  implementation("io.github.mschout:mail-srs-java:0.9.1")
+  implementation("io.github.mschout:netty-codec-netstring:0.6.1")
+  implementation("io.netty:netty-all:4.1.82.Final")
+  implementation("org.jetbrains:annotations:23.0.0")
+  implementation("org.slf4j:slf4j-api:2.0.1")
+
+  testImplementation("org.junit.jupiter:junit-jupiter:5.9.0")
+  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.0")
+}
+
+application {
+  mainClass = "io.github.mschout.srsd.postfix.App"
+}
+
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(11)
+  }
+}
+
+// Include all dependendencies in the jar
+tasks.jar {
+  manifest {
+    attributes("Main-Class" to "io.github.mschout.srsd.postfix.App")
+  }
+
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+  from({
+    configurations.runtimeClasspath.get().map {
+      if (it.isDirectory) it else zipTree(it)
+    }
+  })
+}
+
+// Format java code with spotlessApply task
+//spotless {
+//  java {
+//    prettier(mapOf("prettier" to "2.0.5", "prettier-plugin-java" to "0.8.0")).config(
+//      mapOf(
+//        "parser" to "java",
+//        "tabWidth" to 2,
+//        "printWidth" to 140,
+//        "trailingComma" to "none",
+//        "useTabs" to false
+//      )
+//    )
+//  }
+//}
+
+tasks.withType<JavaCompile>().configureEach {
+  options.encoding = "UTF-8"
+}
+
+jgitver {
+  autoIncrementPatch = false
+  nonQualifierBranches = "main,master"
+}
+
+// vim: ts=2 sw=2
