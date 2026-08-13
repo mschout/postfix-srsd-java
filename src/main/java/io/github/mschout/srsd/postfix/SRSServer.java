@@ -9,21 +9,12 @@ import io.netty.util.internal.logging.InternalLoggerFactory;
 import io.netty.util.internal.logging.Slf4JLoggerFactory;
 import java.util.List;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.Nullable;
 
-@RequiredArgsConstructor
-@Getter
 @Builder
 @Slf4j
-public class SRSServer {
-  private final SocketOptions socketOptions;
-
-  private final List<String> secrets;
-
-  private final String localAlias;
-
+public record SRSServer(SocketOptions socketOptions, List<String> secrets, String localAlias) {
   public void run() throws InterruptedException {
     // Set up Netty to use SlF4j
     InternalLoggerFactory.setDefaultFactory(Slf4JLoggerFactory.INSTANCE);
@@ -49,10 +40,21 @@ public class SRSServer {
       channelFuture.sync().channel().closeFuture().sync();
     } finally {
       log.info("Server shutting down gracefully");
-      if (bootstrap != null) {
-        bootstrap.config().group().shutdownGracefully();
-        bootstrap.config().childGroup().shutdownGracefully();
-      }
+      shutdownBootstrap(bootstrap);
+    }
+  }
+
+  private void shutdownBootstrap(@Nullable ServerBootstrap bootstrap) {
+    if (bootstrap == null) {
+      return;
+    }
+
+    try (var group = bootstrap.config().group();
+        var childGroup = bootstrap.config().childGroup()) {
+      group.shutdownGracefully();
+      childGroup.shutdownGracefully();
+    } catch (Exception e) {
+      log.error("Error shutting down server bootstrap", e);
     }
   }
 }
