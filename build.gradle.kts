@@ -29,6 +29,11 @@ dependencies {
   testRuntimeOnly(libs.junit.jupiter.engine)
 }
 
+tasks.withType<JavaCompile>().configureEach {
+  // -processing is excluded because Lombok's annotation processor triggers spurious warnings
+  options.compilerArgs.addAll(listOf("-Xlint:all", "-Xlint:-processing", "-Werror"))
+}
+
 tasks.test {
   useJUnitPlatform()
 }
