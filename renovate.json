@@ -1,0 +1,31 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":dependencyDashboard"
+  ],
+  "labels": ["dependencies"],
+  "packageRules": [
+    {
+      "description": "Group all Netty artifacts into a single PR",
+      "matchPackageNames": ["io.netty:**"],
+      "groupName": "netty"
+    },
+    {
+      "description": "Group JUnit artifacts into a single PR",
+      "matchPackageNames": ["org.junit**"],
+      "groupName": "junit"
+    },
+    {
+      "description": "Group Logback artifacts into a single PR",
+      "matchPackageNames": ["ch.qos.logback:**"],
+      "groupName": "logback"
+    },
+    {
+      "description": "Automerge non-major GitHub Actions updates",
+      "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
+    }
+  ]
+}
