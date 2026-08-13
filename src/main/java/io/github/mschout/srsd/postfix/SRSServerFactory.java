@@ -7,13 +7,13 @@ import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.epoll.Epoll;
 import io.netty.channel.epoll.EpollDomainSocketChannel;
-import io.netty.channel.epoll.EpollEventLoopGroup;
+import io.netty.channel.epoll.EpollIoHandler;
 import io.netty.channel.epoll.EpollServerDomainSocketChannel;
 import io.netty.channel.kqueue.KQueue;
 import io.netty.channel.kqueue.KQueueDomainSocketChannel;
-import io.netty.channel.kqueue.KQueueEventLoopGroup;
+import io.netty.channel.kqueue.KQueueIoHandler;
 import io.netty.channel.kqueue.KQueueServerDomainSocketChannel;
-import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.nio.NioIoHandler;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import java.nio.charset.StandardCharsets;
@@ -40,8 +40,8 @@ public class SRSServerFactory {
   }
 
   public static ServerBootstrap createTCPSocketServer(SRS srs, String localAlias) {
-    EventLoopGroup bossGroup = new NioEventLoopGroup();
-    EventLoopGroup workerGroup = new NioEventLoopGroup();
+    EventLoopGroup bossGroup = new MultiThreadIoEventLoopGroup(NioIoHandler.newFactory());
+    EventLoopGroup workerGroup = new MultiThreadIoEventLoopGroup(NioIoHandler.newFactory());
 
     ServerBootstrap bootstrap = new ServerBootstrap();
 
@@ -56,8 +56,8 @@ public class SRSServerFactory {
   private static ServerBootstrap createEPollServer(SRS srs, String localAlias) {
     log.info("Creating Epoll based SRS Server");
 
-    EventLoopGroup bossGroup = new EpollEventLoopGroup();
-    EventLoopGroup workerGroup = new EpollEventLoopGroup();
+    EventLoopGroup bossGroup = new MultiThreadIoEventLoopGroup(EpollIoHandler.newFactory());
+    EventLoopGroup workerGroup = new MultiThreadIoEventLoopGroup(EpollIoHandler.newFactory());
 
     return new ServerBootstrap()
         .group(bossGroup, workerGroup)
@@ -68,8 +68,8 @@ public class SRSServerFactory {
   private static ServerBootstrap createKQueueServer(SRS srs, String localAlias) {
     log.info("Creating KQueue based SRS Server");
 
-    EventLoopGroup bossGroup = new KQueueEventLoopGroup();
-    EventLoopGroup workerGroup = new KQueueEventLoopGroup();
+    EventLoopGroup bossGroup = new MultiThreadIoEventLoopGroup(KQueueIoHandler.newFactory());
+    EventLoopGroup workerGroup = new MultiThreadIoEventLoopGroup(KQueueIoHandler.newFactory());
 
     return new ServerBootstrap()
         .group(bossGroup, workerGroup)
@@ -79,7 +79,7 @@ public class SRSServerFactory {
 
   private static <T extends Channel> ChannelInitializer<T> buildChildHandler(
       Class<T> ignoredClass, SRS srs, String localAlias) {
-    return new ChannelInitializer<T>() {
+    return new ChannelInitializer<>() {
 
       @Override
       protected void initChannel(@NotNull T channel) {
