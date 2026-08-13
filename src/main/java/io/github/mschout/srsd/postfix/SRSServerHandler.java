@@ -51,7 +51,7 @@ public class SRSServerHandler extends ChannelInboundHandlerAdapter {
         return "PERM srs forwarding failed";
       }
 
-      if (!address.equals(forward)) log.info("rewrite {} -> {}", address, forward);
+      if (!address.equals(forward)) log.info("forward rewrite {} -> {}", address, forward);
 
       return "OK " + forward;
     } catch (InvalidKeyException e) {
@@ -75,7 +75,7 @@ public class SRSServerHandler extends ChannelInboundHandlerAdapter {
       return "NOTFOUND invalid srs email";
     }
 
-    if (!address.equals(reverse)) log.info("rewrite {} -> {}", address, reverse);
+    if (!address.equals(reverse)) log.info("reverse rewrite {} -> {}", address, reverse);
 
     return "OK " + reverse;
   }
