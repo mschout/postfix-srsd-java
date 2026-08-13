@@ -1,0 +1,32 @@
+[versions]
+guava = "31.1-jre"
+jetbrains-annotations = "23.0.0"
+junit = "5.9.0"
+logback = "1.4.1"
+mail-srs = "0.9.1"
+netty = "4.1.82.Final"
+netty-codec-netstring = "0.6.1"
+picocli = "4.6.3"
+slf4j = "2.0.1"
+
+jgitver-plugin = "0.10.0-rc03"
+lombok-plugin = "6.5.1"
+spotless-plugin = "8.9.0"
+
+[libraries]
+guava = { module = "com.google.guava:guava", version.ref = "guava" }
+jetbrains-annotations = { module = "org.jetbrains:annotations", version.ref = "jetbrains-annotations" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
+junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
+logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+logback-core = { module = "ch.qos.logback:logback-core", version.ref = "logback" }
+mail-srs = { module = "io.github.mschout:mail-srs-java", version.ref = "mail-srs" }
+netty-all = { module = "io.netty:netty-all", version.ref = "netty" }
+netty-codec-netstring = { module = "io.github.mschout:netty-codec-netstring", version.ref = "netty-codec-netstring" }
+picocli = { module = "info.picocli:picocli", version.ref = "picocli" }
+slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
+
+[plugins]
+jgitver = { id = "fr.brouillard.oss.gradle.jgitver", version.ref = "jgitver-plugin" }
+lombok = { id = "io.freefair.lombok", version.ref = "lombok-plugin" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless-plugin" }

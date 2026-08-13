@@ -3,13 +3,13 @@ plugins {
   application
 
   // auto version from git tag
-  id("fr.brouillard.oss.gradle.jgitver") version "0.10.0-rc03"
+  alias(libs.plugins.jgitver)
 
   // Delombok, use delomboked sources for javadoc
-  id("io.freefair.lombok") version "6.5.1"
+  alias(libs.plugins.lombok)
 
   // Format java code with spotless via prettier-java
-  id("com.diffplug.spotless") version "8.9.0"
+  alias(libs.plugins.spotless)
 }
 
 repositories {
@@ -18,18 +18,18 @@ repositories {
 }
 
 dependencies {
-  implementation("ch.qos.logback:logback-classic:1.4.1")
-  implementation("ch.qos.logback:logback-core:1.4.1")
-  implementation("com.google.guava:guava:31.1-jre")
-  implementation("info.picocli:picocli:4.6.3")
-  implementation("io.github.mschout:mail-srs-java:0.9.1")
-  implementation("io.github.mschout:netty-codec-netstring:0.6.1")
-  implementation("io.netty:netty-all:4.1.82.Final")
-  implementation("org.jetbrains:annotations:23.0.0")
-  implementation("org.slf4j:slf4j-api:2.0.1")
+  implementation(libs.logback.classic)
+  implementation(libs.logback.core)
+  implementation(libs.guava)
+  implementation(libs.picocli)
+  implementation(libs.mail.srs)
+  implementation(libs.netty.codec.netstring)
+  implementation(libs.netty.all)
+  implementation(libs.jetbrains.annotations)
+  implementation(libs.slf4j.api)
 
-  testImplementation("org.junit.jupiter:junit-jupiter:5.9.0")
-  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.0")
+  testImplementation(libs.junit.jupiter)
+  testRuntimeOnly(libs.junit.jupiter.engine)
 }
 
 application {
