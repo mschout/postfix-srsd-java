@@ -3,9 +3,10 @@ package io.github.mschout.srsd.postfix.options;
 import lombok.Getter;
 import picocli.CommandLine.Option;
 
-@SuppressWarnings({"FieldMayBeFinal", "CanBeFinal"})
+@SuppressWarnings({"FieldMayBeFinal", "CanBeFinal", "unused"})
 @Getter
 public class LogOptions {
+  // Assigned reflectively by picocli when --log-file is given
   @Option(names = {"--log-file"})
   private String logFile;
 

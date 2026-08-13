@@ -46,12 +46,12 @@ public class SRSServerHandler extends ChannelInboundHandlerAdapter {
       }
 
       String forward = srs.forward(address, localAlias);
-      if (forward == null || forward.isEmpty()) {
+      if (forward.isEmpty()) {
         log.error("SRS Forwarding for address {} failed, got null or empty address", forward);
         return "PERM srs forwarding failed";
       }
 
-      if (!address.equals(forward)) log.info("rewrite {} -> {}", address, forward);
+      if (!address.equals(forward)) log.info("forward rewrite {} -> {}", address, forward);
 
       return "OK " + forward;
     } catch (InvalidKeyException e) {
@@ -70,12 +70,12 @@ public class SRSServerHandler extends ChannelInboundHandlerAdapter {
 
     String reverse = srs.reverse(address);
 
-    if (reverse == null || reverse.isEmpty()) {
+    if (reverse.isEmpty()) {
       log.error("Failed to reverse address {}: received empty or null address", address);
       return "NOTFOUND invalid srs email";
     }
 
-    if (!address.equals(reverse)) log.info("rewrite {} -> {}", address, reverse);
+    if (!address.equals(reverse)) log.info("reverse rewrite {} -> {}", address, reverse);
 
     return "OK " + reverse;
   }
