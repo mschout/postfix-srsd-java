@@ -16,7 +16,6 @@ repositories {
 dependencies {
   implementation(libs.logback.classic)
   implementation(libs.logback.core)
-  implementation(libs.guava)
   implementation(libs.picocli)
   implementation(libs.mail.srs)
   implementation(libs.netty.codec.netstring)

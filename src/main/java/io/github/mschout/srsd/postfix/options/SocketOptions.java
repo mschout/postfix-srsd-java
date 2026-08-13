@@ -1,6 +1,5 @@
 package io.github.mschout.srsd.postfix.options;
 
-import com.google.common.base.Strings;
 import lombok.Getter;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Option;
@@ -15,7 +14,7 @@ public class SocketOptions {
   private String socketPath;
 
   public SocketType getSocketType() {
-    return !Strings.isNullOrEmpty(socketPath) ? SocketType.UNIX : SocketType.TCP;
+    return socketPath != null && !socketPath.isEmpty() ? SocketType.UNIX : SocketType.TCP;
   }
 
   public static class TCPSocketOptions {

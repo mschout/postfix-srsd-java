@@ -1,6 +1,5 @@
 package io.github.mschout.srsd.postfix;
 
-import com.google.common.base.Strings;
 import io.github.mschout.email.srs.SRS;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -48,7 +47,7 @@ public class SRSServerHandler extends ChannelInboundHandlerAdapter {
       }
 
       String forward = srs.forward(address, localAlias);
-      if (Strings.isNullOrEmpty(forward)) {
+      if (forward == null || forward.isEmpty()) {
         log.error("SRS Forwarding for address {} failed, got null or empty address", forward);
         return "PERM srs forwarding failed";
       }
@@ -71,7 +70,7 @@ public class SRSServerHandler extends ChannelInboundHandlerAdapter {
 
     String reverse = srs.reverse(address);
 
-    if (Strings.isNullOrEmpty(reverse)) {
+    if (reverse == null || reverse.isEmpty()) {
       log.error("Failed to reverse address {}: received empty or null address", address);
       return "NOTFOUND invalid srs email";
     }
