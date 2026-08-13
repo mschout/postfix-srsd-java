@@ -1,8 +1,10 @@
 [versions]
 jetbrains-annotations = "26.1.0"
 junit = "6.1.3"
+assertj = "3.27.7"
 logback = "1.6.2"
 lombok-plugin = "9.5.0"
+mockito = "5.23.0"
 mail-srs = "1.0.0"
 mschout-conventions = "0.7.0"
 netty = "4.2.17.Final"
@@ -14,9 +16,11 @@ slf4j = "2.0.18"
 jetbrains-annotations = { module = "org.jetbrains:annotations", version.ref = "jetbrains-annotations" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
+assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 logback-core = { module = "ch.qos.logback:logback-core", version.ref = "logback" }
 mail-srs = { module = "io.github.mschout:mail-srs-java", version.ref = "mail-srs" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 netty-all = { module = "io.netty:netty-all", version.ref = "netty" }
 netty-codec-netstring = { module = "io.github.mschout:netty-codec-netstring", version.ref = "netty-codec-netstring" }
 picocli = { module = "info.picocli:picocli", version.ref = "picocli" }

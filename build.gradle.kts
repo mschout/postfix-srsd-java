@@ -24,7 +24,13 @@ dependencies {
   implementation(libs.slf4j.api)
 
   testImplementation(libs.junit.jupiter)
+  testImplementation(libs.assertj.core)
+  testImplementation(libs.mockito.core)
   testRuntimeOnly(libs.junit.jupiter.engine)
+}
+
+tasks.test {
+  useJUnitPlatform()
 }
 
 application {
