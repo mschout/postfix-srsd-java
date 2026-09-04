@@ -10,7 +10,7 @@ mschout-conventions = "0.7.1"
 netty = "4.2.17.Final"
 netty-codec-netstring = "0.6.1"
 picocli = "4.7.7"
-slf4j = "2.0.18"
+slf4j = "2.0.19"
 
 [libraries]
 jetbrains-annotations = { module = "org.jetbrains:annotations", version.ref = "jetbrains-annotations" }
