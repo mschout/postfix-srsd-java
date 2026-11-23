@@ -5,6 +5,11 @@
     ":dependencyDashboard"
   ],
   "labels": ["dependencies"],
+  "automerge": true,
+  "automergeType": "pr",
+  "platformAutomerge": false,
+  "pruneBranchAfterAutomerge": true,
+  "pruneStaleBranches": true,
   "packageRules": [
     {
       "description": "Group all Netty artifacts into a single PR",
