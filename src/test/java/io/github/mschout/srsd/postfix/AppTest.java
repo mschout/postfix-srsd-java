@@ -129,25 +129,23 @@ class AppTest {
 
   @Test
   void rejectsMissingSocketOptions() {
-    assertThatThrownBy(
-            () ->
-                parse(
-                    "--secret-file", "/etc/srs-secrets",
-                    "--local-alias", "example.com",
-                    "--log-level", "INFO"))
+    assertThatThrownBy(() ->
+            parse(
+                "--secret-file", "/etc/srs-secrets",
+                "--local-alias", "example.com",
+                "--log-level", "INFO"))
         .isInstanceOf(CommandLine.MissingParameterException.class);
   }
 
   @Test
   void rejectsBothUnixAndTCPSocketOptions() {
-    assertThatThrownBy(
-            () ->
-                parse(
-                    "--socket", "/run/srsd.sock",
-                    "--port", "10001",
-                    "--secret-file", "/etc/srs-secrets",
-                    "--local-alias", "example.com",
-                    "--log-level", "INFO"))
+    assertThatThrownBy(() ->
+            parse(
+                "--socket", "/run/srsd.sock",
+                "--port", "10001",
+                "--secret-file", "/etc/srs-secrets",
+                "--local-alias", "example.com",
+                "--log-level", "INFO"))
         .isInstanceOf(CommandLine.MutuallyExclusiveArgsException.class);
   }
 }
